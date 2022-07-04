@@ -51,5 +51,4 @@ try:
 
 except AttributeError:
     print('NA')
-
-
+    
