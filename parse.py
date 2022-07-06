@@ -10,6 +10,8 @@ headers = ({'User-Agent':
 
 
 url = 'https://core-electronics.com.au/raspberry-pi-compute-module-4-lite-1gb-ram.html'
+# url = 'https://core-electronics.com.au/raspberry-pi-compute-module-4-lite-2gb-ram-wireless.html' 
+
 r = requests.get(url, headers=headers)
 print('[Response Code]', r.status_code)
 
@@ -18,28 +20,36 @@ soup = BeautifulSoup(r.content, 'html.parser')
 
 #* TITLE
 try:
-    for title in soup.find_all('h1', attrs=
-                                        {'class': 'page-title'}):
+    for title in soup.find_all(
+                        'h1', attrs={'class': 'page-title'}):
 
         for i in title:
             for j in i:
                 title = j
-        print("[Title]", title)
+        print('[Title]', title)
 
 except AttributeError:
     print('NA')
 
 
-#* IN_STOCK
+#* IN_STOCK  
+#! Needs work!
 try:
-    for stock in soup.find_all('div', attrs=
-                                        {'class': 'product alert stock'}):
+    for stock in soup.find_all(
+                        'div', attrs={'class': 'product alert stock'}):
         x = ''.join(stock.find('p'))
         print('[Stock]', x)
-    
 
 except AttributeError:
     print('NA')
+
+else:
+    for stock in soup.find_all(
+                    'p', attrs={'class': 'single-product-ship-note'}):
+
+        stock_ = stock.get_text(strip=True)[:8]
+        print(f"[Stock] {stock_}!")
+
 
 
 #* Price
@@ -51,4 +61,7 @@ try:
 
 except AttributeError:
     print('NA')
-    
+
+
+#TODO make it so that it is able to take other links as well
+#TODO make it run indefinitely 
