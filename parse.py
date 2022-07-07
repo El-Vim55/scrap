@@ -9,8 +9,9 @@ headers = ({'User-Agent':
                             'Accept-language': 'en-AU, en;q=0.5'})
 
 
-url = 'https://core-electronics.com.au/raspberry-pi-compute-module-4-lite-1gb-ram.html'
-# url = 'https://core-electronics.com.au/raspberry-pi-compute-module-4-lite-2gb-ram-wireless.html' 
+# url = 'https://core-electronics.com.au/raspberry-pi-compute-module-4-lite-1gb-ram.html'
+url = 'https://core-electronics.com.au/raspberry-pi-compute-module-4-lite-2gb-ram-wireless.html' 
+# url = 'https://core-electronics.com.au/raspberry-pi-compute-module-4-32gb-emmc-4gb-ram-wireless.html'
 
 r = requests.get(url, headers=headers)
 print('[Response Code]', r.status_code)
@@ -23,33 +24,26 @@ try:
     for title in soup.find_all(
                         'h1', attrs={'class': 'page-title'}):
 
-        for i in title:
-            for j in i:
-                title = j
-        print('[Title]', title)
+        title_ = title.get_text(strip=True)
+        print(f"[Title] {title_}")
 
 except AttributeError:
     print('NA')
 
 
-#* IN_STOCK  
-#! Needs work!
-try:
+#* IN_STOCK
+def stock() -> str:
+
     for stock in soup.find_all(
                         'div', attrs={'class': 'product alert stock'}):
-        x = ''.join(stock.find('p'))
-        print('[Stock]', x)
+        stock_1 = ''.join(stock.find('p'))
+        return f"[Stock] {stock_1}"
 
-except AttributeError:
-    print('NA')
 
-else:
     for stock in soup.find_all(
-                    'p', attrs={'class': 'single-product-ship-note'}):
-
-        stock_ = stock.get_text(strip=True)[:8]
-        print(f"[Stock] {stock_}!")
-
+                        'p', attrs={'class': 'single-product-ship-note'}):
+        stock_2 = stock.get_text(strip=True)[:8]
+        return f"[Stock] {stock_2}"
 
 
 #* Price
@@ -57,7 +51,7 @@ try:
     for data in soup.find_all('span', attrs=
                                         {'class': 'price'}):
         for price in data:
-            print('[Price]', price)
+            print(f"[Price] {price}")
 
 except AttributeError:
     print('NA')
@@ -65,3 +59,10 @@ except AttributeError:
 
 #TODO make it so that it is able to take other links as well
 #TODO make it run indefinitely 
+
+from time import sleep
+
+if __name__ == '__main__':
+    while True:
+        print(stock())
+        sleep(3)
